@@ -1,0 +1,45 @@
+# Указываем версию синтаксиса docker-compose
+version: '3.8'
+
+# 'services' - это контейнеры, которые мы хотим запустить
+services:
+  #Первый сервис - API
+  api:
+    build: ./API
+    container_name: pet-api-container
+    ports:
+      - "8000:8000"
+    # Говорим, что API зависит от Redis.
+    # Docker Compose сначала запустит redis, и только потом api.
+    environment:
+      - REDIS_HOST=redis
+    depends_on:
+      - redis
+
+  #Второй сервис - Streamlit UI
+  streamlit:
+    build: ./streamlit
+    container_name: pet-streamlit-container
+    ports:
+      - "8501:8501"
+    #Секция для передачи переменных окружения
+    environment:
+      - API_HOST=api
+    depends_on:
+      - api
+
+  #Третий сервис - Redis
+  redis:
+    # Используем официальный готовый образ Redis
+    image: redis:latest
+    container_name: pet-redis-container
+    ports:
+      # Пробрасываем порт для возможной отладки с нашего ПК, но это не обязательно
+      - "6379:6379"
+    # Добавляем volume, чтобы данные кэша не терялись при перезапуске контейнера
+    volumes:
+      - redis-data:/data
+
+#Объявляем "именованный том" для хранения данных Redis
+volumes:
+  redis-data:

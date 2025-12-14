@@ -1,0 +1,25 @@
+# Git
+.git
+.gitignore
+
+# Python кэш
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Виртуальное окружение
+.venv/
+venv/
+env/
+
+# Настройки IDE/Редактора
+.vscode/
+.idea/
+
+# Артефакты тестирования
+.pytest_cache/
+.coverage
+
+# Файл с переменными окружения
+.env
